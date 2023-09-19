@@ -18,18 +18,14 @@ namespace HoleTasksPlagin
         static AddInId addinId = new AddInId(new Guid("683709d1-4e06-415a-93d5-81652b0f4c3b"));
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            /// Получение текущего документа
+
             UIDocument uidoc = commandData.Application.ActiveUIDocument;
             Document doc = uidoc.Document;
-            ///Переменная для связанного файла
             Document linkDoc = null;
-            ///Получение доступа к Selection
             Selection sel = commandData.Application.ActiveUIDocument.Selection; ;
 
-            //Выбор связанного файла
             RevitLinkInstanceSelectionFilter selFilterRevitLinkInstance = new RevitLinkInstanceSelectionFilter();
             Reference selRevitLinkInstance = null;
-        
             try
             {
                 selRevitLinkInstance = sel.PickObject(ObjectType.Element, selFilterRevitLinkInstance, "Выберите связанный файл!");
@@ -51,22 +47,18 @@ namespace HoleTasksPlagin
             linkDoc = revitLinkInstance.First().GetLinkDocument();
             Transform transform = revitLinkInstance.First().GetTotalTransform();
             
-            ///Получение стен из связанного файла
             List<Wall> wallsInLinkList = new FilteredElementCollector(linkDoc)
                 .OfClass(typeof(Wall))
                 .Cast<Wall>()
                 .ToList();
-            ///Получение перекрытий из связанного файла
             List<Floor> floorsInLinkList = new FilteredElementCollector(linkDoc)
                 .OfClass(typeof(Floor))
                 .Cast<Floor>()
                 .ToList();
-            ///Получение трубопроводов
             List<Pipe> pipesList = new FilteredElementCollector(doc)
                 .OfClass(typeof(Pipe))
                 .Cast<Pipe>()
                 .ToList();
-            ///Получение воздуховодов
             List<Duct> ductsList = new FilteredElementCollector(doc)
                 .OfClass(typeof(Duct))
                 .Cast<Duct>()
